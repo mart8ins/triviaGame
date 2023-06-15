@@ -6,7 +6,7 @@ import java.util.*;
 public class TriviaGame {
     private List<String> allQuestions = new ArrayList<>();
     private String currentQuestion;
-    private BigDecimal[] currentAnswers = new BigDecimal[3];
+    private List<BigDecimal> currentAnswers = new ArrayList<>(3);
     private BigDecimal currentCorrectAnswer;
 
     public TriviaGame(Set<String> questions) {
@@ -22,8 +22,8 @@ public class TriviaGame {
 
         System.out.println("* " + currentQuestion);
         System.out.println("Possible answers: ");
-        for(int i = 0; i < currentAnswers.length; i++) {
-            System.out.printf("(%s) %s ", i + 1, currentAnswers[i]);
+        for(int i = 0; i < currentAnswers.size(); i++) {
+            System.out.printf("(%s) %s ", i + 1, currentAnswers.get(i));
         }
         System.out.println();
         System.out.println("Please type your answer: ");
@@ -38,11 +38,14 @@ public class TriviaGame {
 
     private void formatQuestionAndAnswers(String q){
         try {
+            currentAnswers.clear();
             currentQuestion = "What " + q.substring(q.indexOf("is"));
             currentCorrectAnswer = new BigDecimal(q.substring(0, q.indexOf("is")).trim());
-            currentAnswers[0] = currentCorrectAnswer;
-            currentAnswers[1] = new BigDecimal(new Random().nextInt(100)).add(currentAnswers[0]);
-            currentAnswers[2] = new BigDecimal(new Random().nextInt(100)).add(currentAnswers[0]).add(new BigDecimal(21));
+            currentAnswers.add(currentCorrectAnswer);
+            currentAnswers.add(new BigDecimal(new Random().nextInt(100)).add(currentCorrectAnswer));
+            currentAnswers.add(new BigDecimal(new Random().nextInt(100)).add(currentCorrectAnswer).add(new BigDecimal(21)));
+
+            Collections.shuffle(currentAnswers);
         } catch (NumberFormatException e) {
             System.out.println("Problems formatting correct answer.");
         }
